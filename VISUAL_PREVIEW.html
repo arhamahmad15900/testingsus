@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suspecto Enhanced - Visual Preview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0F0F23;
+            color: #E2E8F0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes scanline-scroll {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 4px; }
+        }
+
+        @keyframes neon-pulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(0, 255, 0, 0.4), 0 0 40px rgba(0, 255, 0, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(0, 255, 0, 0.6), 0 0 60px rgba(0, 255, 0, 0.3);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #000000, #0A0A0A, #1A1A2E, #0F3460);
+            background-size: 400% 400%;
+            animation: gradient-shift 15s ease infinite;
+            z-index: 0;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 1;
+        }
+
+        .scanlines {
+            position: absolute;
+            inset: 0;
+            background-image: repeating-linear-gradient(
+                0deg,
+                rgba(255, 255, 255, 0.03),
+                rgba(255, 255, 255, 0.03) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            animation: scanline-scroll 8s linear infinite;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 600px;
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #00FF00, #00FFFF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #94A3B8;
+            margin-bottom: 40px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-neon-green {
+            background: #00FF00;
+            color: #000000;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.4), 0 0 40px rgba(0, 255, 0, 0.2);
+        }
+
+        .btn-neon-green:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.6), 0 0 60px rgba(0, 255, 0, 0.4);
+        }
+
+        .btn-neon-cyan {
+            background: #00FFFF;
+            color: #000000;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4), 0 0 40px rgba(0, 255, 255, 0.2);
+        }
+
+        .btn-neon-cyan:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.6), 0 0 60px rgba(0, 255, 255, 0.4);
+        }
+
+        .games-section {
+            position: relative;
+            padding: 80px 40px;
+            background: #0F0F23;
+            z-index: 0;
+        }
+
+        .games-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(124, 58, 237, 0.05) 0px,
+                rgba(124, 58, 237, 0.05) 1px,
+                transparent 1px,
+                transparent 40px
+            );
+            pointer-events: none;
+        }
+
+        .games-container {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .games-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .games-title h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: #F8FAFC;
+        }
+
+        .games-title p {
+            font-size: 1.2rem;
+            color: #94A3B8;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .game-card {
+            background: linear-gradient(135deg, rgba(30, 28, 53, 0.8), rgba(42, 40, 72, 0.6));
+            border: 2px solid rgba(0, 255, 0, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+        }
+
+        .game-card:hover {
+            border-color: rgba(0, 255, 0, 0.6);
+            box-shadow: 0 0 40px rgba(0, 255, 0, 0.4), 0 0 60px rgba(0, 255, 0, 0.2);
+            transform: translateY(-10px);
+        }
+
+        .game-card.cyan {
+            border-color: rgba(0, 255, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+        }
+
+        .game-card.cyan:hover {
+            border-color: rgba(0, 255, 255, 0.6);
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.4), 0 0 60px rgba(0, 255, 255, 0.2);
+        }
+
+        .game-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .game-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #00FF00;
+        }
+
+        .game-card.cyan h3 {
+            color: #00FFFF;
+        }
+
+        .game-card p {
+            color: #94A3B8;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .game-features {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .game-features li {
+            color: #475569;
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .game-features li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #00FF00;
+        }
+
+        .game-card.cyan .game-features li::before {
+            color: #00FFFF;
+        }
+
+        .cta-section {
+            position: relative;
+            padding: 80px 40px;
+            z-index: 0;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0, 255, 0, 0.05), rgba(0, 255, 255, 0.05));
+            z-index: 0;
+        }
+
+        .cta-box {
+            position: relative;
+            z-index: 10;
+            max-width: 800px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(0, 255, 0, 0.08), rgba(0, 255, 255, 0.08));
+            border: 2px solid rgba(0, 255, 0, 0.3);
+            border-radius: 20px;
+            padding: 60px 40px;
+            text-align: center;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 40px rgba(0, 255, 0, 0.2), 0 0 40px rgba(0, 255, 255, 0.1);
+            animation: neon-pulse 3s ease-in-out infinite;
+        }
+
+        .cta-box h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #00FF00, #00FFFF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-box p {
+            font-size: 1.2rem;
+            color: #94A3B8;
+            margin-bottom: 40px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .feature-card {
+            background: rgba(30, 28, 53, 0.6);
+            border: 1px solid rgba(0, 255, 0, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(0, 255, 0, 0.5);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .feature-card h4 {
+            color: #00FF00;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: #475569;
+            font-size: 0.95rem;
+        }
+
+        footer {
+            position: relative;
+            padding: 40px;
+            text-align: center;
+            background: #0A0A0A;
+            border-top: 1px solid rgba(0, 255, 0, 0.2);
+            color: #475569;
+            z-index: 10;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="scanlines"></div>
+        <div class="hero-content">
+            <h1>Draw. Bluff. Expose.</h1>
+            <p class="subtitle">Experience social deduction gaming with a modern twist</p>
+            <div class="button-group">
+                <button class="btn btn-neon-green">▶ Play Picto</button>
+                <button class="btn btn-neon-cyan">✏️ Play Sketchio</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- GAMES SECTION -->
+    <section class="games-section">
+        <div class="games-container">
+            <div class="games-title">
+                <h2>Choose Your Game</h2>
+                <p>Each mode offers a unique multiplayer experience</p>
+            </div>
+
+            <div class="games-grid">
+                <!-- PICTO Card -->
+                <div class="game-card">
+                    <div class="game-icon">🎨</div>
+                    <h3>Picto</h3>
+                    <p><strong style="color: #00FF00;">Draw · Bluff · Expose</strong></p>
+                    <p>One word. One imposter. Can you draw convincingly while fooling everyone?</p>
+                    <ul class="game-features">
+                        <li>Real-time drawing</li>
+                        <li>Voting rounds</li>
+                        <li>Hidden imposter</li>
+                        <li>Social deduction</li>
+                    </ul>
+                    <p style="color: #94A3B8; font-size: 0.9rem;">👥 3-8 players</p>
+                </div>
+
+                <!-- SKETCHIO Card -->
+                <div class="game-card cyan">
+                    <div class="game-icon">✏️</div>
+                    <h3>Sketchio</h3>
+                    <p><strong style="color: #00FFFF;">Draw & Guess</strong></p>
+                    <p>Draw prompts and guess sketches. Fast-paced creativity meets quick thinking.</p>
+                    <ul class="game-features">
+                        <li>Speed drawing</li>
+                        <li>Instant guessing</li>
+                        <li>Scoring system</li>
+                        <li>Continuous rounds</li>
+                    </ul>
+                    <p style="color: #94A3B8; font-size: 0.9rem;">👥 2-6 players</p>
+                </div>
+            </div>
+
+            <!-- Features -->
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h4>⚡ Real-Time Sync</h4>
+                    <p>WebSocket-powered rooms keep every player perfectly in sync</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🎮 No Install</h4>
+                    <p>Browser-based gaming with no downloads or setup required</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📱 Cross-Device</h4>
+                    <p>Touch-optimized for phones, tablets, and desktops</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA SECTION -->
+    <section class="cta-section">
+        <div class="cta-box">
+            <h2>Ready to Play?</h2>
+            <p>Jump into a game now and challenge your friends. No signup required for quick matches.</p>
+            <div class="button-group">
+                <button class="btn btn-neon-green">Play Picto</button>
+                <button class="btn btn-neon-cyan">Play Sketchio</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>✨ Suspecto | Real-time multiplayer party games | Dark Matrix Theme Enhanced</p>
+    </footer>
+
+    <script>
+        // Simple particle animation
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const hero = document.querySelector('.hero');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        canvas.style.position = 'absolute';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.zIndex = '5';
+        canvas.style.pointerEvents = 'none';
+
+        hero.appendChild(canvas);
+
+        // Particle system
+        const particles = [];
+        for (let i = 0; i < 40; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                size: Math.random() * 2 + 1,
+            });
+        }
+
+        let mouseX = canvas.width / 2;
+        let mouseY = canvas.height / 2;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function animate() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach((p) => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x < 0) p.x = canvas.width;
+                if (p.x > canvas.width) p.x = 0;
+                if (p.y < 0) p.y = canvas.height;
+                if (p.y > canvas.height) p.y = 0;
+
+                const dx = mouseX - p.x;
+                const dy = mouseY - p.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < 300) {
+                    p.vx += (dx * 0.0002);
+                    p.vy += (dy * 0.0002);
+                }
+
+                p.vx *= 0.99;
+                p.vy *= 0.99;
+
+                const colors = ['#00FF00', '#00FFFF', '#0F8E3E'];
+                ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+                ctx.globalAlpha = 0.3;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            ctx.globalAlpha = 1;
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>

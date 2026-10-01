@@ -15,6 +15,8 @@ import {
 import { useAuth } from '../context/AuthContext.js';
 import { Logo } from './Logo.js';
 import { ThreeHero } from './ThreeHero.js';
+import { HeroBackgroundEnhanced } from './HeroBackgroundEnhanced.js';
+import { NeonGlowEffect } from './NeonGlowEffect.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -358,21 +360,16 @@ export const HomePageModern: React.FC<HomePageModernProps> = ({
         ref={heroRef}
         className="relative w-full min-h-screen lg:min-h-[calc(100vh-80px)] flex items-center justify-center overflow-hidden px-4 sm:px-6 py-20"
       >
-        {/* Background gradient */}
-        <div
+        {/* Enhanced Background with Video + Particles */}
+        <HeroBackgroundEnhanced
+          videoSrc="/hero-background.mp4"
+          posterSrc=""
+          particleCount={60}
+          particleColors={['#00FF00', '#00FFFF', '#0F8E3E', '#1ABC9C']}
+          enableParticles={true}
+          overlayOpacity={0.55}
+          height="100%"
           className="absolute inset-0"
-          style={{
-            background: 'radial-gradient(circle at top right, rgba(124, 58, 237, 0.1), transparent 50%), radial-gradient(circle at bottom left, rgba(244, 63, 94, 0.05), transparent 50%)',
-          }}
-        />
-
-        {/* Grid background */}
-        <div
-          className="absolute inset-0 opacity-40"
-          style={{
-            backgroundImage: 'linear-gradient(0deg, transparent 24%, rgba(124, 58, 237, 0.05) 25%, rgba(124, 58, 237, 0.05) 26%, transparent 27%, transparent 74%, rgba(124, 58, 237, 0.05) 75%, rgba(124, 58, 237, 0.05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(124, 58, 237, 0.05) 25%, rgba(124, 58, 237, 0.05) 26%, transparent 27%, transparent 74%, rgba(124, 58, 237, 0.05) 75%, rgba(124, 58, 237, 0.05) 76%, transparent 77%, transparent)',
-            backgroundSize: '60px 60px',
-          }}
         />
 
         {/* Content */}
@@ -459,30 +456,34 @@ export const HomePageModern: React.FC<HomePageModernProps> = ({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="game-card-modern">
-              <ModernGameCard
-                name="Picto"
-                tagline="The Classic"
-                description="One word. One imposter. Can you draw convincingly while fooling everyone?"
-                features={['Real-time drawing', 'Voting rounds', 'Hidden imposter', 'Social deduction']}
-                players="3-8 players"
-                accentColor="#7C3AED"
-                icon={<Gamepad2 size={24} />}
-                onPlay={handlePlayPicto}
-              />
+          <div className="game-card-modern">
+              <NeonGlowEffect color="#00FF00" intensity={0.6} variant="glow">
+                <ModernGameCard
+                  name="Picto"
+                  tagline="The Classic"
+                  description="One word. One imposter. Can you draw convincingly while fooling everyone?"
+                  features={['Real-time drawing', 'Voting rounds', 'Hidden imposter', 'Social deduction']}
+                  players="3-8 players"
+                  accentColor="#7C3AED"
+                  icon={<Gamepad2 size={24} />}
+                  onPlay={handlePlayPicto}
+                />
+              </NeonGlowEffect>
             </div>
 
             <div className="game-card-modern">
-              <ModernGameCard
-                name="Sketchio"
-                tagline="Draw & Guess"
-                description="Draw prompts and guess sketches. Fast-paced creativity meets quick thinking."
-                features={['Speed drawing', 'Instant guessing', 'Scoring system', 'Continuous rounds']}
-                players="2-6 players"
-                accentColor="#F43F5E"
-                icon={<Sparkles size={24} />}
-                onPlay={handlePlaySketchio}
-              />
+              <NeonGlowEffect color="#00FFFF" intensity={0.6} variant="glow">
+                <ModernGameCard
+                  name="Sketchio"
+                  tagline="Draw & Guess"
+                  description="Draw prompts and guess sketches. Fast-paced creativity meets quick thinking."
+                  features={['Speed drawing', 'Instant guessing', 'Scoring system', 'Continuous rounds']}
+                  players="2-6 players"
+                  accentColor="#F43F5E"
+                  icon={<Sparkles size={24} />}
+                  onPlay={handlePlaySketchio}
+                />
+              </NeonGlowEffect>
             </div>
           </div>
         </div>
@@ -492,33 +493,35 @@ export const HomePageModern: React.FC<HomePageModernProps> = ({
           CTA SECTION
       ══════════════════════════════════════ */}
       <section ref={ctaRef} className="w-full py-20 px-4 sm:px-6 lg:px-8">
-        <div
-          className="max-w-4xl mx-auto rounded-2xl p-12 text-center"
-          style={{
-            background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.15) 0%, rgba(244, 63, 94, 0.15) 100%)',
-            border: '1px solid rgba(124, 58, 237, 0.3)',
-            backdropFilter: 'blur(12px)',
-          }}
-        >
-          <h2 className="text-4xl font-bold mb-4">Ready to Play?</h2>
-          <p className="text-lg text-gray-300 mb-8">
-            Jump into a game now and challenge your friends. No signup required for quick matches.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
-              onClick={handlePlayPicto}
-              className="btn btn-lg btn-accent font-semibold"
-            >
-              Play Picto
-            </button>
-            <button
-              onClick={handlePlaySketchio}
-              className="btn btn-lg btn-primary font-semibold"
-            >
-              Play Sketchio
-            </button>
+        <NeonGlowEffect color="#00FF00" intensity={0.7} variant="pulse">
+          <div
+            className="max-w-4xl mx-auto rounded-2xl p-12 text-center neon-glow-blend"
+            style={{
+              background: 'linear-gradient(135deg, rgba(0, 255, 0, 0.05) 0%, rgba(0, 255, 255, 0.05) 100%)',
+              border: '2px solid rgba(0, 255, 0, 0.3)',
+              backdropFilter: 'blur(12px)',
+            }}
+          >
+            <h2 className="text-4xl font-bold mb-4 text-gradient-neon">Ready to Play?</h2>
+            <p className="text-lg text-gray-300 mb-8">
+              Jump into a game now and challenge your friends. No signup required for quick matches.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={handlePlayPicto}
+                className="btn btn-lg btn-accent font-semibold neon-glow-green hover:scale-105 transition-transform"
+              >
+                Play Picto
+              </button>
+              <button
+                onClick={handlePlaySketchio}
+                className="btn btn-lg btn-primary font-semibold neon-glow-cyan hover:scale-105 transition-transform"
+              >
+                Play Sketchio
+              </button>
+            </div>
           </div>
-        </div>
+        </NeonGlowEffect>
       </section>
     </div>
   );
